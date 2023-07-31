@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
 
-    title:{
+    caption:{
         type:String,
         required:true,    
     },
     
-    photo:{
+    image:{
         type:String,
-        default:"no photo"
+        // default:"no photo"
 
     },
     postedBy:{

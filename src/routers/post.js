@@ -5,11 +5,12 @@ const Post = require('../models/post')
 const auth = require('../middleware/auth')
 const Posts = require('../models/post')
 // const upload = multer({ dest: 'uploads/' });
-
+const fileUpload = require('../middleware/file-upload')
 
 router.post('/createpost',auth , async(req,res)=>{
-    const {title } = req.body
-    if(!title){
+  // fileUpload.single('image')
+    const {caption } = req.body
+    if(!caption){
         return res.status(422).json({error:"please add all the fields"})
     }
 
