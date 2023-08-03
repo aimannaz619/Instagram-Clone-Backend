@@ -62,16 +62,17 @@ router.post(
 
     const imageFileName = req.file.filename;
     console.log("imageFileName: " + imageFileName);
+    console.log(req.file.path)
 
     const post = new Post({
-      caption,
-      image:imageFileName,
+    caption,
+      image:req.file.path,
       postedBy: req.user._id,
     });
 
     try {
       await post.save();
-      res.status(201).json(post);
+      res.status(201).send("Post created");
     } catch (e) {
       res.status(400).json({ error: "Error saving post to the database" });
     }
@@ -100,8 +101,9 @@ router.get("/getallposts", async (req, res) => {
     const postsWithImageUrl = posts.map((post) => ({
       _id: post._id,
       caption: post.caption,
-      // imageUrl: post.imageFileName
-      imageUrl: `http://localhost:3000/backend/uploads/${post.imageFileName}`,
+      // imageUrl: post.image
+      // imageUrl: `http://localhost:3000/src/uploads/6cc90324-cd21-4792-a125-485e8f19273c.jpeg`,
+      imageUrl: post.image
     }));
     res.send(postsWithImageUrl);
   } catch (error) {

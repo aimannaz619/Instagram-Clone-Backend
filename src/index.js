@@ -48,7 +48,12 @@ app.use((req, res, next) => {
 
 // Serve uploaded images
 // app.use("./uploads", express.static(path.join(__dirname, "uploads")));
-app.use('./uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('./uploads', express.static(path.join(__dirname, 'uploads')));
+
+// app.use("./uploads", express.static(path.join(__dirname, "./uploads")));y
+
+app.use(express.static(__dirname + '/uploads'));
+app.use('/uploads', express.static('uploads'));
 app.use(userRouter);
 app.use(postRouter);
 
