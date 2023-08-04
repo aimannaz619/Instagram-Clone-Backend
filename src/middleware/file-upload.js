@@ -19,10 +19,9 @@ const fileUpload = multer({
     destination: (req, file, cb) => {
       cb(null, "./uploads");
     },
-    filename: (req, file, cb) => {
-      const ext = MIME_TYPE_MAP[file.mimetype];
-      cb(null, uuid + '.' + ext);
-    }
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + "-" + file.originalname); // A unique filename to prevent overwriting
+    },
   }),
   fileFilter: (req, file, cb) => {
     const isValid = !!MIME_TYPE_MAP[file.mimetype];

@@ -7,49 +7,6 @@ const Posts = require("../models/post");
 // const upload = multer({ dest: 'uploads/' });
 const fileUpload = require("../middleware/file-upload");
 
-// router.post('/createpost' , async(req,res)=>{
-
-//   try{
-//     // await post.save()
-//     res.status(201).send("sEND")
-//   }
-//   catch(e){
-//     res.status(400).send(e)
-//   }
-// })
-
-// router.post(
-//   "/createpost",
-//   auth,
-//   fileUpload.single("image"),
-//   async (req, res) => {
-//     const { caption } = req.body;
-//     if (!caption) {
-//       return res.status(422).json({ error: "please add all the fields" });
-//     }
-//     console.log(req.file.filename);
-//     if (!req.file) {
-//       console.log("file not uploaded ");
-//     }
-//     const imageFileName = req.file.filename;
-//     console.log("imageFileName " + imageFileName);
-
-//     const post = new Post({
-//       // ...req.body,
-//       // imageFileName: req.file.filename,
-//       caption , 
-//       imageFileName,
-
-//       postedBy: req.user._id,
-//     });
-//     try {
-//       res.status(201).send(post);
-//       await post.save();
-//     } catch (e) {
-//       res.status(400).send(e);
-//     }
-//   }
-// );
 router.post(
   "/createpost",
   auth,
@@ -62,11 +19,11 @@ router.post(
 
     const imageFileName = req.file.filename;
     console.log("imageFileName: " + imageFileName);
-    console.log(req.file.path)
-
+    console.log(req.file.path);
+    const imageUrl = "uploads/" + req.file.filename;
     const post = new Post({
-    caption,
-      image:req.file.path,
+      caption,
+      image: imageUrl,
       postedBy: req.user._id,
     });
 
@@ -78,7 +35,6 @@ router.post(
     }
   }
 );
-
 
 // router.get('/getallposts' ,auth , async(req , res)=>{
 
@@ -103,7 +59,7 @@ router.get("/getallposts", async (req, res) => {
       caption: post.caption,
       // imageUrl: post.image
       // imageUrl: `http://localhost:3000/src/uploads/6cc90324-cd21-4792-a125-485e8f19273c.jpeg`,
-      imageUrl: post.image
+      imageUrl: post.image,
     }));
     res.send(postsWithImageUrl);
   } catch (error) {
@@ -147,5 +103,21 @@ router.get("/getmyposts", auth, async (req, res) => {
     res.status(500).send();
   }
 });
+
+// router.get("/getmyposts", auth, async (req, res) => {
+//   try {
+//     await req.user.populate("posts");
+
+//     const myPosts = req.user.posts.map((post) => ({
+//       _id: post._id,
+//       caption: post.caption,
+//       imageUrl: post.image,
+//     }));
+
+//     res.send(myPosts);
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 module.exports = router;
