@@ -98,7 +98,15 @@ router.get("/getmyposts", auth, async (req, res) => {
     await req.user.populate({
       path: "posts",
     });
-    res.send(req.user.posts);
+    const posts = req.user.posts
+    const postsWithImageUrl = posts.map((post) => ({
+      _id: post._id,
+      caption: post.caption,
+      // imageUrl: post.image
+      // imageUrl: `http://localhost:3000/src/uploads/6cc90324-cd21-4792-a125-485e8f19273c.jpeg`,
+      imageUrl: post.image,
+    }));
+    res.send(postsWithImageUrl);
   } catch (e) {
     res.status(500).send();
   }
@@ -119,5 +127,28 @@ router.get("/getmyposts", auth, async (req, res) => {
 //     res.status(500).json({ error: "Internal Server Error" });
 //   }
 // });
+
+
+router.patch('/posts/:id', auth, async (req, res) => {
+  const updates = Object.keys(req.body)
+
+  try {
+    const post = await Post.findOne({ _id: req.params.id, postedBy: req.user._id })
+  
+  if (!post) {
+    return res.status(404).send()
+  }
+  updates.forEach((update) => {
+    post[update] = req.body[update]
+  })
+  await post.save()
+  res.send(post)
+ }
+  catch (e) {
+    res.status(400).send(e)
+}
+  
+
+})
 
 module.exports = router;
